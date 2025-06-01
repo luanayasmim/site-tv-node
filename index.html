@@ -527,47 +527,37 @@
         }
         
         // Called when folder scan is complete
-        function onFolderScanComplete(folder) {
+        async function onFolderScanComplete(folder) {
             refreshSpinner.classList.add('hidden');
             manualRefresh.disabled = false;
-            
-            // In a real app, this would be replaced with actual file system scanning
-            // For demo purposes, we'll simulate finding files based on the folder path
-            
-            // First check if we can access the folder
-            if (!simulateCheckFolderAccess(folder)) {
-                pathError.textContent = 'Não foi possível acessar a pasta. Verifique o caminho e as permissões.';
-                pathError.classList.remove('hidden');
-                videoList.innerHTML = '<p class="text-gray-400 text-center py-4">Erro ao acessar pasta</p>';
-                scanStatusText.classList.add('hidden');
-                return;
-            }
-            
-            // Now find videos in the folder
-            const foundVideos = simulateFindVideos(folder);
-            
+
+            // Checa acesso à pasta (opcional, pode ser removido se confiar no backend)
+            // if (!simulateCheckFolderAccess(folder)) { ... }
+            // Agora, sempre tenta buscar os vídeos reais
+            const foundVideos = await realFindVideos(folder);
+
             if (foundVideos.length === 0) {
                 showMessage('Nenhum vídeo encontrado na pasta');
                 videoList.innerHTML = '<p class="text-gray-400 text-center py-4">Nenhum vídeo encontrado</p>';
                 scanStatusText.classList.add('hidden');
                 return;
             }
-            
-            // Update video list
+
+            // Atualiza a lista de vídeos
             config.videoList = foundVideos;
             updateVideoListUI();
-            
-            // Play first video if not already playing
+
+            // Reproduz o primeiro vídeo se não estiver tocando
             if (config.videoList.length > 0 && (config.currentVideoIndex === 0 || !videoPlayer.src)) {
                 playVideoByIndex(0);
             }
-            
-            // Update status
+
+            // Atualiza status
             config.lastScanTime = new Date();
             updateScanStatus();
             showMessage(`Encontrados ${foundVideos.length} vídeos`);
-            
-            // Update scan count
+
+            // Atualiza contagem
             scanCount.textContent = foundVideos.length;
             scanStatusText.classList.remove('hidden');
         }
@@ -594,56 +584,6 @@
             }
             
             return true;
-        }
-        
-        // Simulate finding video files based on folder path
-        function simulateFindVideos(folder) {
-            // This is a simulation - in a real app, you would scan the actual file system
-            
-            // Generate some realistic file names based on the folder type
-            const isNetworkPath = folder.startsWith('\\\\');
-            const isLocalPath = folder.includes(':\\') || folder.startsWith('/');
-            
-            let videoFiles = [];
-            
-            if (isNetworkPath) {
-                // Network share - simulate corporate videos
-                videoFiles = [
-                    'Apresentação Corporativa.mp4',
-                    'Treinamento de Segurança.mkv',
-                    'Reunião Mensal.avi',
-                    'Demonstração de Produto.mp4',
-                    'Instruções de Uso.webm',
-                    'Vídeo Institucional.mov'
-                ];
-            } else if (isLocalPath) {
-                // Local path - simulate personal videos
-                videoFiles = [
-                    'Férias 2023.mp4',
-                    'Aniversário.mov',
-                    'Filme Favorito.mkv',
-                    'Documentário.mp4',
-                    'Gravação de Tela.webm',
-                    'Vídeo do Celular.avi'
-                ];
-            }
-            
-            // Filter by supported formats and create full paths
-            const foundVideos = videoFiles
-                .filter(file => config.videoFormats.some(format => file.toLowerCase().endsWith(format)))
-                .map(file => ({
-                    name: file,
-                    path: folder.endsWith('\\') || folder.endsWith('/') 
-                        ? `${folder}${file}`
-                        : `${folder}\\${file}`,
-                    exists: true // In real app, this would check file existence
-                }));
-            
-            // Simulate that some files might not exist (10% chance per file)
-            return foundVideos.filter(video => {
-                // 90% chance the file "exists" in our simulation
-                return Math.random() < 0.9;
-            });
         }
         
         // Update video list UI
@@ -682,23 +622,19 @@
         // Play video by index
         function playVideoByIndex(index) {
             if (index < 0 || index >= config.videoList.length) return;
-            
             config.currentVideoIndex = index;
             const video = config.videoList[index];
-            
-            // In a real app, this would set the actual video source
-            // For demo, we'll just simulate it with a sample video
-            videoPlayer.src = `https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4`;
+            // Usa o caminho local do vídeo (servido pelo backend)
+            // Para funcionar no navegador, é necessário servir os arquivos de vídeo via backend (ex: rota /file?path=...)
+            // Aqui, vamos supor que você vai criar essa rota depois
+            videoPlayer.src = `http://localhost:3001/file?path=${encodeURIComponent(video.path)}`;
             videoPlayer.load();
-            
             if (config.autoplay) {
                 videoPlayer.play().catch(e => {
                     console.error('Autoplay prevented:', e);
                     showMessage('Clique para reproduzir (autoplay bloqueado)');
                 });
             }
-            
-            // Update UI
             currentVideoTitle.textContent = video.name;
             videoCount.textContent = `${index + 1}/${config.videoList.length}`;
             updateVideoListUI();
@@ -798,6 +734,26 @@
         
         // Initialize the app when DOM is loaded
         document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Substitua realFindVideos por uma função que consome a API REST
+        async function realFindVideos(folder) {
+            try {
+                const response = await fetch(`http://localhost:3001/videos?dir=${encodeURIComponent(folder)}`);
+                const result = await response.json();
+                if (!result.success) {
+                    showMessage('Erro ao acessar a pasta: ' + (result.error || 'Erro desconhecido'));
+                    return [];
+                }
+                return result.videos.map(video => ({
+                    name: video.name,
+                    path: video.path,
+                    exists: true
+                }));
+            } catch (err) {
+                showMessage('Erro ao conectar à API: ' + err.message);
+                return [];
+            }
+        }
     </script>
 </body>
 </html>
