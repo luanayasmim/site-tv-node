@@ -48,6 +48,19 @@ Ou abra o `index.html` diretamente no navegador (alguns recursos podem não func
 - É necessário ter permissão de leitura na pasta de vídeos.
 - Para acessar pastas de rede, o computador deve estar conectado à rede correspondente.
 
+## Atalhos de Teclado
+
+| Tecla                | Ação                                 |
+|----------------------|--------------------------------------|
+| Espaço               | Play/Pause (Reproduzir/Pausar)       |
+| Setas Esquerda/Direita | Retroceder/Avançar 5 segundos      |
+| Setas Cima/Baixo     | Aumentar/Diminuir volume             |
+| F                    | Alternar tela cheia (Fullscreen)     |
+| M                    | Ativar/Desativar mudo                |
+| N                    | Próximo vídeo                        |
+| P                    | Vídeo anterior                       |
+| Esc                  | Sair do modo tela cheia              |
+
 ---
 
 Desenvolvido por Luana Yasmim - Rafael Lourenço (2025)

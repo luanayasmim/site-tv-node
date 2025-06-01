@@ -1,4 +1,3 @@
-/* Custom CSS for fullscreen video */
 #videoContainer {
     position: fixed;
     top: 0;
@@ -53,7 +52,6 @@
     width: 0%;
 }
 
-/* Animation for brief messages */
 @keyframes fadeInOut {
     0% { opacity: 0; }
     10% { opacity: 1; }
@@ -76,7 +74,6 @@
     animation: fadeInOut 3s ease-in-out;
 }
 
-/* Light theme styles */
 .light-theme {
     background-color: #f3f4f6;
     color: #111827;

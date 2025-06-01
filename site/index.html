@@ -9,12 +9,10 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body class="bg-black text-white">
-    <!-- Video Container -->
     <div id="videoContainer">
         <video id="videoPlayer" autoplay></video>
     </div>
     
-    <!-- Status Bar (hidden by default) -->
     <div id="statusBar">
         <div class="flex justify-between items-center">
             <span id="currentVideoTitle">Nenhum vídeo carregado</span>
@@ -25,7 +23,6 @@
         </div>
     </div>
     
-    <!-- Controls Overlay (hidden by default) -->
     <div id="controlsOverlay">
         <div class="flex justify-between items-center mb-2">
             <span id="videoTime">00:00 / 00:00</span>
@@ -54,7 +51,6 @@
         </div>
     </div>
     
-    <!-- Settings Panel (hidden by default) -->
     <div id="settingsPanel" class="fixed top-0 right-0 bg-gray-900 text-white p-6 w-80 h-full transform translate-x-full transition-transform duration-300 z-20 overflow-y-auto">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold">Configurações</h2>
@@ -67,9 +63,6 @@
             <h3 class="text-lg font-semibold mb-3">Pasta de Vídeos</h3>
             <div class="flex items-center space-x-2">
                 <input type="text" id="folderPath" placeholder="Caminho da pasta" class="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2">
-                <button id="browseBtn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
-                    <i class="fas fa-folder-open mr-2"></i>Procurar
-                </button>
             </div>
             <p class="text-sm text-gray-400 mt-2">Exemplo: C:\Videos ou \\SERVER\Videos</p>
             <div id="pathError" class="text-red-400 text-sm mt-2 hidden"></div>
@@ -132,10 +125,8 @@
         </button>
     </div>
     
-    <!-- Brief Message Display -->
     <div id="message" class="message"></div>
     
-    <!-- Settings Button (always visible) -->
     <button id="settingsBtn" class="fixed bottom-4 right-4 bg-gray-800 hover:bg-gray-700 p-3 rounded-full z-10">
         <i class="fas fa-cog"></i>
     </button>

@@ -6,10 +6,8 @@ const cors = require("cors");
 const app = express();
 const PORT = 3001;
 
-// Permite requisições do frontend
 app.use(cors());
 
-// Formatos de vídeo suportados
 const SUPPORTED_FORMATS = [
   ".mp4",
   ".avi",
@@ -20,7 +18,6 @@ const SUPPORTED_FORMATS = [
   ".wmv",
 ];
 
-// Endpoint para listar vídeos de um diretório
 app.get("/videos", (req, res) => {
   const dir = req.query.dir;
   if (!dir) {
@@ -43,13 +40,12 @@ app.get("/videos", (req, res) => {
   }
 });
 
-// Rota para servir arquivos de vídeo
 app.get("/file", (req, res) => {
   const filePath = req.query.path;
   if (!filePath) {
     return res.status(400).send("Parâmetro path é obrigatório");
   }
-  // Stream do arquivo de vídeo
+
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
       return res.status(404).send("Arquivo não encontrado");
@@ -58,11 +54,10 @@ app.get("/file", (req, res) => {
     if (!range) {
       res.writeHead(200, {
         "Content-Length": stats.size,
-        "Content-Type": "video/mp4", // ou detectar pelo ext
+        "Content-Type": "video/mp4",
       });
       fs.createReadStream(filePath).pipe(res);
     } else {
-      // Suporte a streaming parcial (seeking)
       const parts = range.replace(/bytes=/, "").split("-");
       const start = parseInt(parts[0], 10);
       const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
@@ -71,7 +66,7 @@ app.get("/file", (req, res) => {
         "Content-Range": `bytes ${start}-${end}/${stats.size}`,
         "Accept-Ranges": "bytes",
         "Content-Length": chunkSize,
-        "Content-Type": "video/mp4", // ou detectar pelo ext
+        "Content-Type": "video/mp4",
       });
       fs.createReadStream(filePath, { start, end }).pipe(res);
     }
