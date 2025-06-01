@@ -50,4 +50,4 @@ Ou abra o `index.html` diretamente no navegador (alguns recursos podem não func
 
 ---
 
-Desenvolvido por Yasmin (2025)
+Desenvolvido por Luana Yasmim - Rafael Lourenço (2025)
