@@ -1,10 +1,10 @@
-# Reprodutor de Vídeos Automático (Electron)
+# Reprodutor de Vídeos Automático (Web + API)
 
-Este projeto é um reprodutor de vídeos automático feito com Electron, que permite selecionar uma pasta local ou de rede, listar todos os vídeos suportados e reproduzi-los automaticamente em sequência.
+Este projeto é um reprodutor de vídeos automático que utiliza uma API Node.js/Express para listar e servir vídeos de um diretório local ou de rede, permitindo que o frontend (site) consuma essa lista e reproduza os vídeos dinamicamente com autoplay.
 
 ## Funcionalidades
 - Seleção de pasta local ou de rede (ex: `C:\Videos` ou `\\SERVIDOR\Videos`)
-- Listagem automática de todos os vídeos suportados na pasta
+- Listagem automática de todos os vídeos suportados na pasta via API
 - Reprodução automática (autoplay) e looping de playlist
 - Interface moderna com Tailwind CSS
 - Suporte a temas claro e escuro
@@ -20,33 +20,22 @@ Abra o terminal na pasta do projeto e execute:
 ```powershell
 npm install
 ```
-Se ainda não instalou o Electron, rode:
-```powershell
-npm install electron
-```
 
-### 2. Confirme os arquivos principais
-Certifique-se de que você tem estes arquivos na raiz do projeto:
-- `index.html` (frontend)
-- `main.js` (processo principal Electron)
-- `preload.js` (expondo a API para o frontend)
-- `package.json` (com o campo `"main": "main.js"`)
-
-### 3. Adicione o script de inicialização no package.json
-No seu `package.json`, adicione (ou ajuste) o campo scripts:
-```json
-"scripts": {
-  "start": "electron ."
-}
-```
-
-### 4. Execute a aplicação
+### 2. Inicie a API backend
 No terminal, rode:
 ```powershell
-npm start
+node server.js
 ```
+A API estará disponível em `http://localhost:3001`.
 
-### 5. Use a aplicação
+### 3. Sirva o frontend (index.html)
+Para evitar problemas de CORS e arquivos locais, utilize uma extensão como Live Server no VS Code, ou rode um servidor local simples:
+```powershell
+npx serve .
+```
+Ou abra o `index.html` diretamente no navegador (alguns recursos podem não funcionar em file://).
+
+### 4. Use a aplicação
 - Na interface, digite o caminho da pasta de vídeos (ex: `C:\Users\yasmi\Videos` ou `\\SERVIDOR\Videos`).
 - Clique em "Procurar" ou pressione Enter.
 - Os vídeos reais da pasta serão listados e reproduzidos automaticamente.
@@ -54,10 +43,11 @@ npm start
 ---
 
 ## Observações
-- O projeto só funciona como app desktop (Electron), não funciona em navegador comum.
+- O backend Node.js/Express precisa rodar no mesmo computador que tem acesso à pasta de vídeos.
+- O frontend se comunica com a API via HTTP (`/videos` para listar e `/file` para servir os vídeos).
 - É necessário ter permissão de leitura na pasta de vídeos.
 - Para acessar pastas de rede, o computador deve estar conectado à rede correspondente.
 
 ---
 
-Desenvolvido por Yasmim (2025)
+Desenvolvido por Yasmin (2025)
