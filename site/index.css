@@ -1,4 +1,4 @@
- /* Custom CSS for fullscreen video */
+/* Custom CSS for fullscreen video */
 #videoContainer {
     position: fixed;
     top: 0;
@@ -137,4 +137,12 @@
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+.light-theme input[type="text"],
+.light-theme input[type="number"],
+.light-theme input[type="range"] {
+    color: #111827;
+    background-color: #fff;
+    border-color: #d1d5db;
 }
